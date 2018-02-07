@@ -1,0 +1,30 @@
+version: "2"
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: "wp-main"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - .:/var/www/html
+      - ./log:/tmp/log
+    depends_on:
+      - db
+    environment:
+      WORDPRESS_DB_HOST: "db:3306"
+    networks:
+      - wp-net
+    env_file: .env
+
+  db:
+    image: mysql:5.7
+    container_name: "wp-db"
+    volumes:
+      - "./db-data:/var/lib/mysql"
+    networks:
+      - wp-net
+    env_file: .env
+
+networks:
+  wp-net:
